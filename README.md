@@ -6,7 +6,7 @@ Group 2: Ella Clevens, Lydia Jin, Lennon Hare, and Noah Wexler
 20 Questions - Animals
 
 (REMEMBER PROPERLY LABEL COMMITS WERE GRADED ON IT)
-
+(also, Any formating will apear much clearer Viewing it Raw)
 
 Brainstorm Section below:  (write ideas below the line and label it with your name)
 ____________________________________________________________
