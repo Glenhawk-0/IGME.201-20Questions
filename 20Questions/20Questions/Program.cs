@@ -28,7 +28,25 @@ namespace _20Questions
         {
             Console.WriteLine("Welcome to our 20 questions game! Think of something and we'll try to guess it!");
 
-            QuestionTree(); 
+            QuestionTree();
+
+            bool playAgain = true;
+
+            while (playAgain)
+            {
+                // start game 
+                PlayGame();
+                Console.WriteLine("Would you like to play again? yes or no");
+                string response = Console.ReadLine().ToLower();
+
+                // check if user wants to play again 
+                if (response != "yes")
+                {
+                    playAgain = false;
+                }
+            }
+
+            Console.WriteLine("Thanks for playing!");
         }
 
         // simple starter tree with predefined question and answers 
@@ -51,8 +69,6 @@ namespace _20Questions
             // left side of the sub-tree 
             root.Left.Right = new TreeNode("Is it a car?");
             root.Left.Left = new TreeNode("Is it a building?");
-
-            Console.WriteLine(QuestionTree);
         }
 
         // play game 
