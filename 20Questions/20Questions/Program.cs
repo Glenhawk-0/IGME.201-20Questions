@@ -25,7 +25,7 @@ namespace _20Questions
     internal class Program
     {
 
-        static TreeNode root;
+        public static TreeNode root;
 
         static void Main(string[] args)
         {
@@ -60,7 +60,7 @@ namespace _20Questions
             // to write an "AddNode" for a tree next week).
 
             // Create the root
-            TreeNode root = new TreeNode("Does it Fly?");
+            root = new TreeNode("Does it Fly?");
 
             // Add the left side sub-tree to the root
             root.Left = new TreeNode("is it still a bird though?");
@@ -85,7 +85,7 @@ namespace _20Questions
             Console.WriteLine(root.Right.Data);
           
             Console.WriteLine(root.Right.Right.Data);/**/
-
+            
 
 
 
@@ -97,6 +97,12 @@ namespace _20Questions
         // play game 
         static void PlayGame()
         {
+            //thank you nick. the root stuff can now be called outside of the question tree class
+            Console.WriteLine(root.Data);
+            Console.WriteLine(root.Left.Data);
+            Console.WriteLine(root.Right.Data);
+
+            string response = Console.ReadLine().ToLower();
 
         }
 
