@@ -15,8 +15,8 @@ namespace _20Questions
         // Create a disconnected tree node with specified data
         public TreeNode(String data)
         {
-            Left = null;
-            Right = null;
+            Left = null;  // Left == no
+            Right = null; //Right == yes
             Data = data;
         }
     }
@@ -79,12 +79,12 @@ namespace _20Questions
             root.Right.Right.Left = new TreeNode("is it a seagull");
 
             // use this down here to simply view stuff.  comment out when your done
-
+            /*
             Console.WriteLine(root.Data);
             Console.WriteLine(root.Left.Data);
             Console.WriteLine(root.Right.Data);
           
-            Console.WriteLine(root.Right.Right.Data);
+            Console.WriteLine(root.Right.Right.Data);/**/
 
 
 
