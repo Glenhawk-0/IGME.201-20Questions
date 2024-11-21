@@ -179,20 +179,17 @@ namespace _20Questions
             if (newPath == "yes")
             {
                 //place to right
-                newNode.Right = correctNode;
-                newNode.Left = new TreeNode(incorrectNode.Data);
-                incorrectNode.Data = newQuestion;
-                incorrectNode.Left = newNode.Left;
-                incorrectNode.Right = newNode.Right;
+                newNode.Yes = correctNode;
+                newNode.No = incorrectNode;
             } else
             {
                 //place to left
-                newNode.Left = correctNode;
-                newNode.Right = new TreeNode(incorrectNode.Data);
-                incorrectNode.Data = newQuestion;
-                incorrectNode.Left = newNode.Left;
-                incorrectNode.Right = newNode.Right;
+                newNode.No = correctNode;
+                newNode.Yes = incorrectNode;
             }
+            incorrectNode.QuestionOrAnswer = newQuestion;
+            incorrectNode.Yes = newNode.Yes;
+            incorrectNode.No = newNode.No;
             Console.WriteLine("Thank you for helping me expand my data!");
         }
     }
