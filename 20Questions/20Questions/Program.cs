@@ -6,18 +6,16 @@ namespace _20Questions
     // Defining TreeNode Class 
     class TreeNode
     {
-        // Fields 
-        // (with auto-properties so the code fits on the slides)
-        public TreeNode Left { get; set; }
-        public TreeNode Right { get; set; }
-        public String Data { get; set; }
+        public string QuestionOrAnswer { get; set; }
+        public TreeNode No { get; set; }
+        public TreeNode Yes { get; set; }
 
         // Create a disconnected tree node with specified data
-        public TreeNode(String data)
+        public TreeNode(String questionOrAnswer)
         {
-            Left = null;  // Left == no
-            Right = null; //Right == yes
-            Data = data;
+            QuestionOrAnswer = questionOrAnswer;
+            No = null;
+            Yes = null;
         }
     }
 
@@ -26,6 +24,7 @@ namespace _20Questions
     {
 
         public static TreeNode root;
+
 
         static void Main(string[] args)
         {
@@ -38,7 +37,7 @@ namespace _20Questions
             while (playAgain)
             {
                 // start game 
-                PlayGame();
+                PlayGame(root);
                 Console.WriteLine("Would you like to play again? yes or no");
                 string response = Console.ReadLine().ToLower();
 
@@ -55,37 +54,33 @@ namespace _20Questions
         // simple starter tree with predefined question and answers 
         static void QuestionTree()
         {
-            // Build the binary tree example from the slides
-            // manually (this will be ugly, but we'll cover how
-            // to write an "AddNode" for a tree next week).
-
             // Create the root
             root = new TreeNode("Does it Fly?");
 
             // Add the left side sub-tree to the root
-            root.Left = new TreeNode("is it still a bird though?");
-            root.Left.Left = new TreeNode("does it 'breath' water ");
-            root.Left.Left.Right = new TreeNode("is it a fish");
-            root.Left.Left.Right.Right = new TreeNode("Win Condition (im not going further than its a fish)");
-            root.Left.Right = new TreeNode("is it a penguin?");
+            root.No = new TreeNode("is it still a bird though?");
+            root.No.No = new TreeNode("does it 'breath' water ");
+            root.No.No.Yes = new TreeNode("fish");
+            //root.No.No.Yes.Yes = new TreeNode("");
+            root.No.Yes = new TreeNode("penguin?");
 
             // Add the right side sub-tree to the root
-            root.Right = new TreeNode("does it poop on you");
-            root.Left = new TreeNode("damn... i give up");
+            root.Yes = new TreeNode("does it poop on you");
+            root.Yes.No = new TreeNode("... um.. no way.. this animal doesnt exist");
 
-            root.Right.Right = new TreeNode("Does it live in the city");
+            root.Yes.Yes = new TreeNode("Does it live in the city");
 
-            root.Right.Right.Right = new TreeNode("is it a pigeon");
-            root.Right.Right.Left = new TreeNode("is it a seagull");
+            root.Yes.Yes.Yes = new TreeNode("pigeon");
+            root.Yes.Yes.No = new TreeNode("seagull");
+
+            root.Yes.Yes.No.No = new TreeNode("its not a seagull!? darn, i give up");
 
             // use this down here to simply view stuff.  comment out when your done
             /*
-            Console.WriteLine(root.Data);
-            Console.WriteLine(root.Left.Data);
-            Console.WriteLine(root.Right.Data);
-          
-            Console.WriteLine(root.Right.Right.Data);/**/
-            
+            Console.WriteLine(root.QuestionOrAnswer);
+            /**/
+
+            // Print the tree starting at the root
 
 
 
@@ -95,15 +90,71 @@ namespace _20Questions
 
 
         // play game 
-        static void PlayGame()
+        static void PlayGame(TreeNode node)
         {
-            //thank you nick. the root stuff can now be called outside of the question tree class
-            Console.WriteLine(root.Data);
-            Console.WriteLine(root.Left.Data);
-            Console.WriteLine(root.Right.Data);
+            // The game plays through recursion
+            if (node.Yes == null && node.No == null)
+            {
+                // If we reach an answer (leaf node), we guess it
+                Console.WriteLine("I think it's a " + node.QuestionOrAnswer + "!");
+                Console.WriteLine("Was I correct? (yes/no)");
+                string response = Console.ReadLine().ToLower();
 
-            string response = Console.ReadLine().ToLower();
+                if (response == "no")
+                {
+                    // If the guess was incorrect, ask the user for a new question to improve the tree
+                    Console.WriteLine("I guessed wrong! Please tell me a question that would differentiate a " +
+                                      node.QuestionOrAnswer + " from your answer.");
+                    string newQuestion = Console.ReadLine();
 
+                    Console.WriteLine("What would the answer be for your item? (yes/no)");
+                    string answer = Console.ReadLine().ToLower();
+
+                    Console.WriteLine("What is the correct answer? (e.g., 'dog')");
+                    string newAnswer = Console.ReadLine();
+
+                    // Create a new node for the new question and answers
+                    TreeNode newQuestionNode = new TreeNode(newQuestion);
+                    if (answer == "yes")
+                    {
+                        newQuestionNode.Yes = new TreeNode(newAnswer);
+                        newQuestionNode.No = node;
+                    }
+                    else
+                    {
+                        newQuestionNode.No = new TreeNode(newAnswer);
+                        newQuestionNode.Yes = node;
+                    }
+
+                    // Replace the old guess with the new question node
+                    node = newQuestionNode;
+                }
+                else
+                {
+                    // If the guess was correct, end the game
+                    Console.WriteLine("Yay! I guessed it right.");
+                }
+            }
+            else
+            {
+                // If the current node is a question, ask it
+                Console.WriteLine(node.QuestionOrAnswer + " (yes/no)");
+                string response = Console.ReadLine().ToLower();
+
+                if (response == "yes")
+                {
+                    PlayGame(node.Yes); // Move to the "yes" branch
+                }
+                else if (response == "no")
+                {
+                    PlayGame(node.No); // Move to the "no" branch
+                }
+                else
+                {
+                    Console.WriteLine("Please answer with 'yes' or 'no'.");
+                    PlayGame(node); // Retry the same question
+                }
+            }
         }
 
         // learns the new information given by user to expand the tree with new questions and answers 
