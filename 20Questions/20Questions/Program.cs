@@ -107,9 +107,42 @@ namespace _20Questions
         }
 
         // learns the new information given by user to expand the tree with new questions and answers 
-        static void LearnNewInfo()
+        static void LearnNewInfo(TreeNode incorrectNode)
         {
-
+            //Guessed incorrectly
+            Console.WriteLine("I guessed incorrectly! Please help me create a new question to help me guess your animal next time.");
+            Console.WriteLine("What is the name of the correct animal you had in mind?");
+            //store user inputted answer into new variable
+            string newAnswer = Console.ReadLine();
+            Console.WriteLine("Thank you. Now, input a yes/no question that distinguishes your animal from my guess.");
+            //store user inputted question into new variable
+            string newQuestion = Console.ReadLine();
+            //What is the answer
+            Console.WriteLine("Would the answer to this new question be 'yes' or 'no' for your animal?");
+            string newPath = Console.ReadLine().ToLower();
+            
+            //create node
+            TreeNode newNode = new TreeNode(newQuestion);
+            TreeNode correctNode = new TreeNode(newAnswer);
+            //add correctly based off y/n
+            if (newPath == "yes")
+            {
+                //place to right
+                newNode.Right = correctNode;
+                newNode.Left = new TreeNode(incorrectNode.Data);
+                incorrectNode.Data = newQuestion;
+                incorrectNode.Left = newNode.Left;
+                incorrectNode.Right = newNode.Right;
+            } else
+            {
+                //place to left
+                newNode.Left = correctNode;
+                newNode.Right = new TreeNode(incorrectNode.Data);
+                incorrectNode.Data = newQuestion;
+                incorrectNode.Left = newNode.Left;
+                incorrectNode.Right = newNode.Right;
+            }
+            Console.WriteLine("Thank you for helping me expand my data!");
         }
     }
 }
