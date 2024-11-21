@@ -4,13 +4,16 @@ namespace _20Questions
 {
 
     // Defining TreeNode Class 
-    public class TreeNode
+    class TreeNode
     {
-        public string Data { get; set; }
-        public TreeNode Left { get; set; } // left for "no" response 
-        public TreeNode Right { get; set; } // right for "yes" response 
+        // Fields 
+        // (with auto-properties so the code fits on the slides)
+        public TreeNode Left { get; set; }
+        public TreeNode Right { get; set; }
+        public String Data { get; set; }
 
-        public TreeNode(string data)
+        // Create a disconnected tree node with specified data
+        public TreeNode(String data)
         {
             Left = null;
             Right = null;
@@ -26,7 +29,7 @@ namespace _20Questions
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to our 20 questions game! Think of something and we'll try to guess it!");
+            Console.WriteLine("Welcome to our 20 questions game! Think of an animal and we'll try to guess it!");
 
             QuestionTree();
 
@@ -52,24 +55,44 @@ namespace _20Questions
         // simple starter tree with predefined question and answers 
         static void QuestionTree()
         {
-            // questions and answers from Nick's example 
-            root = new TreeNode("Is it an animal?");
-            root.Right = new TreeNode("Does it have four legs?");
-            root.Left = new TreeNode("Is it a vehicle?");
+            // Build the binary tree example from the slides
+            // manually (this will be ugly, but we'll cover how
+            // to write an "AddNode" for a tree next week).
 
-            // right side of the sub-tree
-            root.Right.Right = new TreeNode("Is it a pet?");
-            root.Right.Right.Right = new TreeNode("It's a dog!");
-            root.Right.Right.Left = new TreeNode("It's a horse!");
+            // Create the root
+            TreeNode root = new TreeNode("Does it Fly?");
 
-            root.Right.Left = new TreeNode("Does it fly?");
-            root.Right.Left.Right = new TreeNode("It's a bird!");
-            root.Right.Left.Left = new TreeNode("It's a fish!");
+            // Add the left side sub-tree to the root
+            root.Left = new TreeNode("is it still a bird though?");
+            root.Left.Left = new TreeNode("does it 'breath' water ");
+            root.Left.Left.Right = new TreeNode("is it a fish");
+            root.Left.Left.Right.Right = new TreeNode("Win Condition (im not going further than its a fish)");
+            root.Left.Right = new TreeNode("is it a penguin?");
 
-            // left side of the sub-tree 
-            root.Left.Right = new TreeNode("Is it a car?");
-            root.Left.Left = new TreeNode("Is it a building?");
+            // Add the right side sub-tree to the root
+            root.Right = new TreeNode("does it poop on you");
+            root.Left = new TreeNode("damn... i give up");
+
+            root.Right.Right = new TreeNode("Does it live in the city");
+
+            root.Right.Right.Right = new TreeNode("is it a pigeon");
+            root.Right.Right.Left = new TreeNode("is it a seagull");
+
+            // use this down her to simply view stuff.  comment out when your done
+
+            Console.WriteLine(root.Data);
+            Console.WriteLine(root.Left.Data);
+            Console.WriteLine(root.Right.Data);
+            Console.WriteLine(root.Left.Right.Data);
+            Console.WriteLine(root.Right.Right.Data);
+
+
+
+
         }
+
+
+
 
         // play game 
         static void PlayGame()
