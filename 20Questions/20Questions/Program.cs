@@ -177,7 +177,7 @@ namespace _20Questions
             Console.WriteLine("Thank you. Now, input a yes/no question that distinguishes your animal from my guess.");
             //store user inputted question into new variable
             string newQuestion = Console.ReadLine();
-            //What is the answer
+            //What is the answer  //potential error here. i think the user could input something other than yes or not and completely break the code
             Console.WriteLine("Would the answer to this new question be 'yes' or 'no' for your animal?");
             string newPath = Console.ReadLine().ToLower();
             
