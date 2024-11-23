@@ -102,8 +102,13 @@ namespace _20Questions
 
                 if (response == "no")
                 {
+
+                   
+                    LearnNewInfo(node);
+                    /*Old mockup of New answer code
                     // If the guess was incorrect, ask the user for a new question to improve the tree
-                    Console.WriteLine("I guessed wrong! Please tell me a question that would differentiate a " +
+
+                    /*Console.WriteLine("I guessed wrong! Please tell me a question that would differentiate a " +
                                       node.QuestionOrAnswer + " from your answer.");
                     string newQuestion = Console.ReadLine();
 
@@ -128,6 +133,8 @@ namespace _20Questions
 
                     // Replace the old guess with the new question node
                     node = newQuestionNode;
+
+                    /*Old new answer*/
                 }
                 else
                 {
@@ -160,7 +167,9 @@ namespace _20Questions
         // learns the new information given by user to expand the tree with new questions and answers 
         static void LearnNewInfo(TreeNode incorrectNode)
         {
+            Console.WriteLine("inserted variable, incorect node: " + incorrectNode);
             //Guessed incorrectly
+
             Console.WriteLine("I guessed incorrectly! Please help me create a new question to help me guess your animal next time.");
             Console.WriteLine("What is the name of the correct animal you had in mind?");
             //store user inputted answer into new variable
