@@ -28,31 +28,103 @@ namespace _20Questions
 
         static void Main(string[] args)
         {
+            string filePath = "../../../savedTree.txt"; // RELATIVE PATH TO THE TREE FILE
+            Console.WriteLine("Tree is being saved to: " + Path.GetFullPath(filePath));
+
             Console.WriteLine("Welcome to our 20 questions game! Think of an animal and we'll try to guess it!");
 
-            QuestionTree();
+            // CHECK IF THE FILE EXISTS
+            if (File.Exists(filePath))
+            {
+                Console.WriteLine("Saved tree found. Loading tree...");
+                root = loadTree(filePath);
+            }
+            else
+            {
+                Console.WriteLine("No saved tree found. Creating a new tree...");
+                QuestionTreeDefault(); // BUILD DEFAULT TREE IF FILE DOESN'T EXIST
+            }
 
             bool playAgain = true;
 
             while (playAgain)
             {
-                // start game 
+                // START THE GAME
                 PlayGame(root);
                 Console.WriteLine("Would you like to play again? yes or no");
                 string response = Console.ReadLine().ToLower();
 
-                // check if user wants to play again 
+                // CHECK IF USER WANTS TO PLAY AGAIN
                 if (response != "yes")
                 {
                     playAgain = false;
                 }
             }
 
+            // SAVE TREE TO FILE BEFORE EXITING
+            saveTree(root, filePath);
             Console.WriteLine("Thanks for playing!");
         }
 
-        // simple starter tree with predefined question and answers 
-        static void QuestionTree()
+
+        // simple starter tree with predefined question and answers `
+        // SAVE FUNCTIONS
+
+
+        //function to generate a string of each deth
+        static string treeStringBuilder(TreeNode node, int depth)
+            {
+                if (node == null) return "";
+
+                // CREATE A LINE USING ''*'' AS A DEPTH INDICATOR                         // adds crossplatform support instead of /n :)
+                string currentLine = new string('*', depth) + node.QuestionOrAnswer + Environment.NewLine;
+
+                // Recursively generate the string for the Yes and No branches
+                string yesBranch = treeStringBuilder(node.Yes, depth + 1);
+                string noBranch = treeStringBuilder(node.No, depth + 1);
+
+                return currentLine + yesBranch + noBranch;
+            }
+            static void saveTree(TreeNode root, string filePath)
+            {
+                string treeString = treeStringBuilder(root, 0);
+                File.WriteAllText(filePath, treeString);
+                Console.WriteLine("Tree has been saved successfully!");
+            }
+
+        // LOAD FUNCTIONS
+        static TreeNode loadLine(string[] lines, ref int index, int depth)
+        {
+            if (index >= lines.Length) return null;
+
+            // Count the number of '*' to determine the depth
+            int currentDepth = lines[index].TakeWhile(c => c == '*').Count();
+
+            // If the depth doesn't match, backtrack
+            if (currentDepth != depth) return null;
+
+            string questionOrAnswer = lines[index].Substring(currentDepth).Trim();
+            TreeNode node = new TreeNode(questionOrAnswer);
+            index++;
+            node.Yes = loadLine(lines, ref index, depth + 1);
+            node.No = loadLine(lines, ref index, depth + 1);
+
+            return node;
+        }
+        static TreeNode loadTree(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("No saved tree found. Starting fresh.");
+                return null;
+            }
+
+            string[] lines = File.ReadAllLines(filePath);
+            int index = 0;
+
+            return loadLine(lines, ref index, 0);
+        }
+        static void QuestionTreeDefault()
         {
             // Create the root
             root = new TreeNode("Does it Fly?");
@@ -73,17 +145,12 @@ namespace _20Questions
             root.Yes.Yes.Yes = new TreeNode("pigeon");
             root.Yes.Yes.No = new TreeNode("seagull");
 
-            root.Yes.Yes.No.No = new TreeNode("its not a seagull!? darn, i give up");
-
             // use this down here to simply view stuff.  comment out when your done
-            /*
+
             Console.WriteLine(root.QuestionOrAnswer);
-            /**/
+
 
             // Print the tree starting at the root
-
-
-
         }
 
 
@@ -91,7 +158,7 @@ namespace _20Questions
 
         // play game 
         static void PlayGame(TreeNode node)
-        {
+        {   
             // The game plays through recursion
             if (node.Yes == null && node.No == null)
             {
@@ -99,7 +166,6 @@ namespace _20Questions
                 Console.WriteLine("I think it's a " + node.QuestionOrAnswer + "!");
                 Console.WriteLine("Was I correct? (yes/no)");
                 string response = Console.ReadLine().ToLower();
-
                 if (response == "no")
                 {
 
@@ -167,39 +233,51 @@ namespace _20Questions
         // learns the new information given by user to expand the tree with new questions and answers 
         static void LearnNewInfo(TreeNode incorrectNode)
         {
-            Console.WriteLine("inserted variable, incorect node: " + incorrectNode);
-            //Guessed incorrectly
-
+            // ASK USER FOR NEW INFORMATION TO UPDATE THE TREE
             Console.WriteLine("I guessed incorrectly! Please help me create a new question to help me guess your animal next time.");
             Console.WriteLine("What is the name of the correct animal you had in mind?");
-            //store user inputted answer into new variable
             string newAnswer = Console.ReadLine();
+
             Console.WriteLine("Thank you. Now, input a yes/no question that distinguishes your animal from my guess.");
-            //store user inputted question into new variable
             string newQuestion = Console.ReadLine();
-            //What is the answer  //potential error here. i think the user could input something other than yes or not and completely break the code
+
             Console.WriteLine("Would the answer to this new question be 'yes' or 'no' for your animal?");
             string newPath = Console.ReadLine().ToLower();
-            
-            //create node
-            TreeNode newNode = new TreeNode(newQuestion);
-            TreeNode correctNode = new TreeNode(newAnswer);
-            //add correctly based off y/n
+
+            // CREATE A NEW QUESTION NODE
+            TreeNode newQuestionNode = new TreeNode(newQuestion);
+
+            // CREATE A NODE FOR THE CORRECT ANSWER (USER'S INPUT)
+            TreeNode correctAnswerNode = new TreeNode(newAnswer);
+
+            // DETERMINE WHERE THE USER'S ANIMAL BELONGS IN THE TREE
             if (newPath == "yes")
             {
-                //place to right
-                newNode.Yes = correctNode;
-                newNode.No = incorrectNode;
-            } else
-            {
-                //place to left
-                newNode.No = correctNode;
-                newNode.Yes = incorrectNode;
+                newQuestionNode.Yes = correctAnswerNode; // USER'S ANIMAL IS THE "YES" BRANCH
+                newQuestionNode.No = new TreeNode(incorrectNode.QuestionOrAnswer)
+                {
+                    Yes = incorrectNode.Yes,
+                    No = incorrectNode.No
+                };
             }
-            incorrectNode.QuestionOrAnswer = newQuestion;
-            incorrectNode.Yes = newNode.Yes;
-            incorrectNode.No = newNode.No;
+            else
+            {
+                newQuestionNode.No = correctAnswerNode; // USER'S ANIMAL IS THE "NO" BRANCH
+                newQuestionNode.Yes = new TreeNode(incorrectNode.QuestionOrAnswer)
+                {
+                    Yes = incorrectNode.Yes,
+                    No = incorrectNode.No
+                };
+            }
+
+            // REPLACE THE INCORRECT NODE'S DATA WITH THE NEW QUESTION NODE
+            incorrectNode.QuestionOrAnswer = newQuestionNode.QuestionOrAnswer;
+            incorrectNode.Yes = newQuestionNode.Yes;
+            incorrectNode.No = newQuestionNode.No;
+
             Console.WriteLine("Thank you for helping me expand my data!");
         }
+
+
     }
 }
