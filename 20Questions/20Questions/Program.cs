@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace _20Questions
 {
@@ -64,6 +65,9 @@ namespace _20Questions
             // SAVE TREE TO FILE BEFORE EXITING
             saveTree(root, filePath);
             Console.WriteLine("Thanks for playing!");
+
+            // Error Testing 
+            //PrintTree(root);
         }
 
 
@@ -113,17 +117,42 @@ namespace _20Questions
         }
         static TreeNode loadTree(string filePath)
         {
-            if (!File.Exists(filePath))
+            //if (!File.Exists(filePath))
+            //{
+            //    Console.WriteLine("No saved tree found. Starting fresh.");
+            //     return null;
+            //}
+
+            //string[] lines = File.ReadAllLines(filePath);
+            //int index = 0;
+
+            //return loadLine(lines, ref index, 0);
+            string[] lines = File.ReadAllLines(filePath);
+            if(lines.Length == 0)
             {
                 Console.WriteLine("No saved tree found. Starting fresh.");
-                return null;
+                QuestionTreeDefault();
+                return root;
             }
 
-            string[] lines = File.ReadAllLines(filePath);
             int index = 0;
 
             return loadLine(lines, ref index, 0);
+
+
         }
+
+        // Error Testing By printing tree
+        static void PrintTree(TreeNode node, int depth = 0)
+        {
+            if (node == null) return;
+
+            Console.WriteLine(new string('-', depth) + node.QuestionOrAnswer);
+            PrintTree(node.Yes, depth + 1);
+            PrintTree(node.No, depth + 1);
+        }
+
+
         static void QuestionTreeDefault()
         {
             // Create the root
@@ -133,6 +162,7 @@ namespace _20Questions
             root.No = new TreeNode("is it still a bird though?");
             root.No.No = new TreeNode("does it 'breath' water ");
             root.No.No.Yes = new TreeNode("fish");
+            root.No.No.No = new TreeNode("dog");
             //root.No.No.Yes.Yes = new TreeNode("");
             root.No.Yes = new TreeNode("penguin?");
 
@@ -159,6 +189,12 @@ namespace _20Questions
         // play game 
         static void PlayGame(TreeNode node)
         {   
+
+            if (node == null)
+            {
+                Console.WriteLine("Error Occurred: Reached a null node. Check again");
+                return;
+            }
             // The game plays through recursion
             if (node.Yes == null && node.No == null)
             {

@@ -5,7 +5,9 @@ Does it Fly?
 ***seagull
 **is it the dawg
 ***the dawg
-***... um.. no way.. this animal doesnt exist
+***does it talk
+****parrot
+****... um.. no way.. this animal doesnt exist
 *is it still a bird though?
 **penguin?
 **does it 'breath' water
